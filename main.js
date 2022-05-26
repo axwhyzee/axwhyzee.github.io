@@ -1,5 +1,7 @@
 var apiEndpointIds = 'https://axwhyzee.pythonanywhere.com/get_ids/?n=';
 var apiEndpointFreq = 'https://axwhyzee.pythonanywhere.com/get_freq/?ids=';
+var scrollArrowRight = document.getElementById('scroll-arrow-right')
+var scrollArrowLeft = document.getElementById('scroll-arrow-left')
 var loadingText = document.getElementById('loading-text');
 var display = document.getElementById('central-display');
 var dateMenu = document.getElementById('date-tabs-menu');
@@ -13,8 +15,8 @@ var activeDate;
 var todayDate;
 var numBars;
 
-const post_count = 500;
-const posts_per_request = 25;
+const post_count = 50;
+const posts_per_request = 10;
 
 function loading() {
 	document.getElementById('loading-wheel').style.display = 'Block';
@@ -123,6 +125,8 @@ async function chunking(combinedFreq, ids) {
 			chunking(combined, ids);
 		}, 2200);
 	} else {
+		scrollArrowRight.style.display = 'block';
+		scrollArrowLeft.style.display = 'block';
 		document.getElementById('loading-container').remove();
 		delete loadingText;
 		createNavTabs();
@@ -160,14 +164,14 @@ function resetGraph(freqList) {
 function createGraph(freqList) {
 	const keys = Object.keys(freqList)
 	const yintervals = 4;
-	let limit = keys.length;
+	let limit = Math.min(keys.length, 75);
 	let count = 0;
 	
 	if (keys.length > 0) {
 		const maxFreq = Object.values(freqList)[0];
 		
-		if(document.body.offsetWidth < 360) limit = Math.min(30, keys.length);
-		else if (document.body.offsetWidth < 640) limit = Math.min(50, keys.length);
+		if(document.body.offsetWidth < 360) limit = Math.min(25, keys.length);
+		else if (document.body.offsetWidth < 640) limit = Math.min(40, keys.length);
 		
 		for (let j=0; j<limit; j++) {
 			const column = document.createElement('div');
@@ -241,7 +245,7 @@ function toCorner() {
 	const loadingContainer = document.getElementById('loading-container');
 	const blackScreen = document.getElementById('black-screen');
 	const docBody = document.body;
-	const length = 100;
+	const length = loadingContainer.offsetWidth / 2;
 	const hypothenuse = Math.sqrt(2*length*length);
 	
 	if (docBody.offsetWidth > docBody.offsetHeight) {
@@ -251,8 +255,8 @@ function toCorner() {
 		blackScreen.style.height = '300vh';
 		blackScreen.style.width = '300vh';
 	}
-	
-	if (docBody.offsetWidth < 640) {
+	// 640
+	if (docBody.offsetWidth < 0) {
 		loadingText.style.display = 'none';
 		document.getElementById('loading-icon').style.display = 'none';
 	} else {
@@ -298,6 +302,27 @@ function shuffle(e) {
 	bar.classList.add('active-bar');
 }
 
+function scrollRight() {
+	document.getElementById('bar-id-' + activeBar).classList.remove('active-bar');
+	activeBar++;
+	
+	if (activeBar >= numBars) activeBar = 0;
+	const bar = document.getElementById('bar-id-' + activeBar);
+	display.innerHTML = bar.getAttribute('data-value');
+	bar.classList.add('active-bar');
+}
+
+function scrollLeft() {
+	document.getElementById('bar-id-' + activeBar).classList.remove('active-bar');
+	activeBar--;
+	
+	if (activeBar < 0) activeBar = numBars-1;
+	const bar = document.getElementById('bar-id-' + activeBar);
+	display.innerHTML = bar.getAttribute('data-value');
+	bar.classList.add('active-bar');
+}
+
+
 function toggleMenu() {
 	if (dateMenu.style.top == '' || dateMenu.style.top == '100%') dateMenu.style.top = '0';
 	else dateMenu.style.top = '100%';
@@ -305,6 +330,8 @@ function toggleMenu() {
 }
 
 document.getElementById('menu-icon').addEventListener('click', toggleMenu);
+scrollArrowRight.addEventListener('mousedown', scrollRight) 
+scrollArrowLeft.addEventListener('mousedown', scrollLeft) 
 
 today.setDate(today.getDate() - 1);
 todayDate = strftime(today);
