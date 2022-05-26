@@ -8,6 +8,7 @@ Version: 1.0
 	box-sizing: border-box;
 	font-family: calibri;
 	outline-style: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 html {

@@ -330,8 +330,8 @@ function toggleMenu() {
 }
 
 document.getElementById('menu-icon').addEventListener('click', toggleMenu);
-scrollArrowRight.addEventListener('mousedown', scrollRight) 
-scrollArrowLeft.addEventListener('mousedown', scrollLeft) 
+scrollArrowRight.addEventListener('click', scrollRight);
+scrollArrowLeft.addEventListener('click', scrollLeft) ;
 
 today.setDate(today.getDate() - 1);
 todayDate = strftime(today);
