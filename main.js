@@ -15,8 +15,8 @@ var activeDate;
 var todayDate;
 var numBars;
 
-const post_count = 50;
-const posts_per_request = 10;
+const post_count = 250;
+const posts_per_request = 25;
 
 function loading() {
 	document.getElementById('loading-wheel').style.display = 'Block';
