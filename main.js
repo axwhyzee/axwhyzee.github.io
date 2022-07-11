@@ -15,7 +15,7 @@ var activeDate;
 var todayDate;
 var numBars;
 
-const post_count = 250;
+const post_count = 400;
 const posts_per_request = 25;
 
 function loading() {
